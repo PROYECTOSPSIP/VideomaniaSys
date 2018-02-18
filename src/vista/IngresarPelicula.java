@@ -453,7 +453,8 @@ public class IngresarPelicula extends JPanel {
 				
 				peliculaController.create(pelicula);
 				
-				for(int i = 0 ; i < list.getModel().getSize() ; i ++){
+				//SE DEBE UTILIZAR PERSITENCIA 
+				/*for(int i = 0 ; i < list.getModel().getSize() ; i ++){
 					TypedQuery<Actor> queryA = em.createNamedQuery("Actor.findByNombresActor", Actor.class).setParameter("nombresActor", list.getModel().getElementAt(i));
 					List<Actor> actorList = queryA.getResultList();
 					
@@ -464,7 +465,7 @@ public class IngresarPelicula extends JPanel {
 					}
 				}
 				
-				peliculaController.ingresarPeliculaActor(1, 1);
+				peliculaController.ingresarPeliculaActor(1, 1);*/
 				
 				return true;
 			}
