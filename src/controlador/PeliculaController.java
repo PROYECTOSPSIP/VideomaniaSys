@@ -21,7 +21,6 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import conexionBDD.ParametrosConexion;
 import controlador.exceptions.NonexistentEntityException;
 import modelo.Actor;
 import modelo.Genero;
@@ -353,7 +352,8 @@ public class PeliculaController implements Serializable {
         }
     }
     
-    public void ingresarPeliculaActor(int idActor, int idPelicula){
+  //SE DEBE UTILIZAR PERSITENCIA 
+    /*public void ingresarPeliculaActor(int idActor, int idPelicula){
         try {
         	ParametrosConexion parametrosConexion = new ParametrosConexion();
 			conn = parametrosConexion.conectar();
@@ -369,5 +369,5 @@ public class PeliculaController implements Serializable {
         catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
-    }
+    }*/
 }
