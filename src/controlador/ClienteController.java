@@ -11,6 +11,7 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import modelo.Operadora;
 import modelo.VentaPelicula;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,11 +20,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import modelo.Cliente;
 
+/**
+ *
+ * @author elichinita58
+ */
 public class ClienteController implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
-	public ClienteController(EntityManagerFactory emf) {
+    public ClienteController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -40,6 +43,11 @@ public class ClienteController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Operadora idOperadora = cliente.getIdOperadora();
+            if (idOperadora != null) {
+                idOperadora = em.getReference(idOperadora.getClass(), idOperadora.getIdOperadora());
+                cliente.setIdOperadora(idOperadora);
+            }
             Collection<VentaPelicula> attachedVentaPeliculaCollection = new ArrayList<VentaPelicula>();
             for (VentaPelicula ventaPeliculaCollectionVentaPeliculaToAttach : cliente.getVentaPeliculaCollection()) {
                 ventaPeliculaCollectionVentaPeliculaToAttach = em.getReference(ventaPeliculaCollectionVentaPeliculaToAttach.getClass(), ventaPeliculaCollectionVentaPeliculaToAttach.getIdVentaPelicula());
@@ -47,6 +55,10 @@ public class ClienteController implements Serializable {
             }
             cliente.setVentaPeliculaCollection(attachedVentaPeliculaCollection);
             em.persist(cliente);
+            if (idOperadora != null) {
+                idOperadora.getClienteCollection().add(cliente);
+                idOperadora = em.merge(idOperadora);
+            }
             for (VentaPelicula ventaPeliculaCollectionVentaPelicula : cliente.getVentaPeliculaCollection()) {
                 Cliente oldIdClienteOfVentaPeliculaCollectionVentaPelicula = ventaPeliculaCollectionVentaPelicula.getIdCliente();
                 ventaPeliculaCollectionVentaPelicula.setIdCliente(cliente);
@@ -70,8 +82,14 @@ public class ClienteController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Cliente persistentCliente = em.find(Cliente.class, cliente.getIdCliente());
+            Operadora idOperadoraOld = persistentCliente.getIdOperadora();
+            Operadora idOperadoraNew = cliente.getIdOperadora();
             Collection<VentaPelicula> ventaPeliculaCollectionOld = persistentCliente.getVentaPeliculaCollection();
             Collection<VentaPelicula> ventaPeliculaCollectionNew = cliente.getVentaPeliculaCollection();
+            if (idOperadoraNew != null) {
+                idOperadoraNew = em.getReference(idOperadoraNew.getClass(), idOperadoraNew.getIdOperadora());
+                cliente.setIdOperadora(idOperadoraNew);
+            }
             Collection<VentaPelicula> attachedVentaPeliculaCollectionNew = new ArrayList<VentaPelicula>();
             for (VentaPelicula ventaPeliculaCollectionNewVentaPeliculaToAttach : ventaPeliculaCollectionNew) {
                 ventaPeliculaCollectionNewVentaPeliculaToAttach = em.getReference(ventaPeliculaCollectionNewVentaPeliculaToAttach.getClass(), ventaPeliculaCollectionNewVentaPeliculaToAttach.getIdVentaPelicula());
@@ -80,6 +98,14 @@ public class ClienteController implements Serializable {
             ventaPeliculaCollectionNew = attachedVentaPeliculaCollectionNew;
             cliente.setVentaPeliculaCollection(ventaPeliculaCollectionNew);
             cliente = em.merge(cliente);
+            if (idOperadoraOld != null && !idOperadoraOld.equals(idOperadoraNew)) {
+                idOperadoraOld.getClienteCollection().remove(cliente);
+                idOperadoraOld = em.merge(idOperadoraOld);
+            }
+            if (idOperadoraNew != null && !idOperadoraNew.equals(idOperadoraOld)) {
+                idOperadoraNew.getClienteCollection().add(cliente);
+                idOperadoraNew = em.merge(idOperadoraNew);
+            }
             for (VentaPelicula ventaPeliculaCollectionOldVentaPelicula : ventaPeliculaCollectionOld) {
                 if (!ventaPeliculaCollectionNew.contains(ventaPeliculaCollectionOldVentaPelicula)) {
                     ventaPeliculaCollectionOldVentaPelicula.setIdCliente(null);
@@ -125,6 +151,11 @@ public class ClienteController implements Serializable {
                 cliente.getIdCliente();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The cliente with id " + id + " no longer exists.", enfe);
+            }
+            Operadora idOperadora = cliente.getIdOperadora();
+            if (idOperadora != null) {
+                idOperadora.getClienteCollection().remove(cliente);
+                idOperadora = em.merge(idOperadora);
             }
             Collection<VentaPelicula> ventaPeliculaCollection = cliente.getVentaPeliculaCollection();
             for (VentaPelicula ventaPeliculaCollectionVentaPelicula : ventaPeliculaCollection) {

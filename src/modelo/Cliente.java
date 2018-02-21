@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -22,7 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author eduardo
+ * @author elichinita58
  */
 @Entity
 @Table(name = "cliente")
@@ -35,7 +37,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Cliente.findByNombresCliente", query = "SELECT c FROM Cliente c WHERE c.nombresCliente = :nombresCliente")
     , @NamedQuery(name = "Cliente.findByDireccion", query = "SELECT c FROM Cliente c WHERE c.direccion = :direccion")
     , @NamedQuery(name = "Cliente.findByTelefonoConvencional", query = "SELECT c FROM Cliente c WHERE c.telefonoConvencional = :telefonoConvencional")
-    , @NamedQuery(name = "Cliente.findByTelefeonoCelular", query = "SELECT c FROM Cliente c WHERE c.telefeonoCelular = :telefeonoCelular")})
+    , @NamedQuery(name = "Cliente.findByTelefeonoCelular", query = "SELECT c FROM Cliente c WHERE c.telefeonoCelular = :telefeonoCelular")
+    , @NamedQuery(name = "Cliente.findByEmail", query = "SELECT c FROM Cliente c WHERE c.email = :email")})
 public class Cliente implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -56,6 +59,11 @@ public class Cliente implements Serializable {
     private String telefonoConvencional;
     @Column(name = "telefeono_celular")
     private String telefeonoCelular;
+    @Column(name = "email")
+    private String email;
+    @JoinColumn(name = "id_operadora", referencedColumnName = "id_operadora")
+    @ManyToOne
+    private Operadora idOperadora;
     @OneToMany(mappedBy = "idCliente")
     private Collection<VentaPelicula> ventaPeliculaCollection;
 
@@ -120,6 +128,22 @@ public class Cliente implements Serializable {
 
     public void setTelefeonoCelular(String telefeonoCelular) {
         this.telefeonoCelular = telefeonoCelular;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Operadora getIdOperadora() {
+        return idOperadora;
+    }
+
+    public void setIdOperadora(Operadora idOperadora) {
+        this.idOperadora = idOperadora;
     }
 
     @XmlTransient

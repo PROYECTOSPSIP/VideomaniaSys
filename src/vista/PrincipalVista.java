@@ -17,9 +17,11 @@ public class PrincipalVista extends JFrame implements ActionListener {
 	private JMenuItem mntmIngresarPelicula, mntmConsultarPelicula, mntmIngresarCliente, mntmGestionarUsuarios, mntmGestionarActores;;
 	private IngresarPelicula ingresarPelicula;
 	private ConsultarPelicula consultarPelicula;
-	private GestionCliente gestionCliente;
-	private GestionarActor gestionarActor;
-	private GestionarUsuario gestionarUsuario;
+//	private GestionCliente gestionCliente;
+//	private GestionarActor gestionarActor;
+//	private GestionarUsuario gestionarUsuario;
+	private IngresarCliente ingresarCliente;
+	private NuevoUsuario nuevoUsuario;
 	
 	/**
 	 * Launch the application.
@@ -107,14 +109,14 @@ public class PrincipalVista extends JFrame implements ActionListener {
 		if(e.getSource() == mntmGestionarUsuarios)
 			gestionarUsuario();
 		
-		if(e.getSource() == mntmGestionarActores)
-			gestionarActor();
+//		if(e.getSource() == mntmGestionarActores)
+//			gestionarActor();
 		
 	}
 	
 	public void ingresarPelicula(){
 		try{
-			this.remove(gestionarActor);
+			//this.remove(gestionarActor);
 			this.remove(consultarPelicula);
 		}
 		catch(Exception e){
@@ -247,27 +249,26 @@ public class PrincipalVista extends JFrame implements ActionListener {
 		 this.remove(ingresarPelicula);
 		}
 		catch(Exception e){
-		}
-		
-		gestionarUsuario =  new GestionarUsuario();
-		gestionarUsuario.setVisible(true);
-		getContentPane().add(gestionarUsuario, BorderLayout.CENTER);
+		}		
+		nuevoUsuario =  new NuevoUsuario();
+		nuevoUsuario.setVisible(true);
+		getContentPane().add(nuevoUsuario, BorderLayout.CENTER);
 		pack();		
 	}
 	
-	public void gestionarActor(){
-		try{
-		 this.remove(ingresarPelicula);
-		}
-		catch(Exception e){
-		}
-		
-		gestionarActor=  new GestionarActor();
-		gestionarActor.setVisible(true);
-		getContentPane().add(gestionarActor, BorderLayout.CENTER);
-		this.pack();		
-	}
-	
+//	public void gestionarActor(){
+//		try{
+//		 this.remove(ingresarPelicula);
+//		}
+//		catch(Exception e){
+//		}
+//		
+//		gestionarActor=  new GestionarActor();
+//		gestionarActor.setVisible(true);
+//		getContentPane().add(gestionarActor, BorderLayout.CENTER);
+//		this.pack();		
+//	}
+//	
 	public void gestionarCliente(){
 		try{
 		 this.remove(ingresarPelicula);
@@ -275,9 +276,9 @@ public class PrincipalVista extends JFrame implements ActionListener {
 		catch(Exception e){
 		}
 		
-		gestionCliente =  new GestionCliente();
-		gestionCliente.setVisible(true);
-		getContentPane().add(gestionCliente, BorderLayout.CENTER);
+		ingresarCliente =  new IngresarCliente();
+		ingresarCliente.setVisible(true);
+		getContentPane().add(ingresarCliente, BorderLayout.CENTER);
 		pack();		
 	}
 }
