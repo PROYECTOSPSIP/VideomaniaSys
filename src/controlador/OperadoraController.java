@@ -8,7 +8,9 @@ package controlador;
 import controlador.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import modelo.Cliente;
@@ -187,5 +189,15 @@ public class OperadoraController implements Serializable {
             em.close();
         }
     }
+    
+    public List<Operadora> operadoraList(){
+		
+		//EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("VideomaniaSys");
+		EntityManager em = emf.createEntityManager();
+		TypedQuery<Operadora> query = em.createNamedQuery("Operadora.findAll", Operadora.class);
+		List<Operadora> operadoraList = query.getResultList();
+		
+		return operadoraList;
+	}
     
 }
